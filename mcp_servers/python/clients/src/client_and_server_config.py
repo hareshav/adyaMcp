@@ -9,9 +9,20 @@ ServersConfig = [
 		"command":"uv",
 		"args": [
 			"--directory",
-			"../servers/MCP-GSUITE/mcp-gsuite",
+			"mcp_servers/python/servers/MCP-GSUITE/mcp-gsuite",
 			"run",
 			"mcp-gsuite"
 		]
+	},
+	{
+		"server_name": "MCP-APPSIGNAL",
+		"command": "uv",
+		"args": [
+			"--directory",
+			"mcp_servers/python/servers/MCP-APPSIGNAL/mcp-appsignal",
+			"run",
+			"mcp-appsignal"
+		]
 	}
+
 ]

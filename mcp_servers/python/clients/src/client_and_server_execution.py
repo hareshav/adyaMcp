@@ -35,7 +35,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
         selected_client = payload.get("selected_client", "")
         selected_servers = payload.get("selected_servers", [])
         selected_server = selected_servers[0] if selected_servers else ""
-
         # Prepare chat history
         input_content = client_details.get("input", "")
         if "chat_history" in client_details:
@@ -561,7 +560,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                 result.Status = initial_llm_response.Status
                 return result
             extracted_result = extract_data_from_response(initial_llm_response.Data.get("messages", [{}])[0] if initial_llm_response.Data else "")
-            
             result.Data["total_llm_calls"] += 1
             result.Data["total_tokens"] += initial_llm_response.Data.get("total_tokens", 0)
             result.Data["total_input_tokens"] += initial_llm_response.Data.get("total_input_tokens", 0)
@@ -590,7 +588,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
 
                 client_details["prompt"] = temp_prompt
                 client_details["tools"] = final_tool_calls
-             
 
                 # Loop to handle multiple LLM calls and tool executions
                 count=1
@@ -648,7 +645,7 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                     first_candidate = candidates[0] if candidates and len(candidates) > 0 else {}
                     content = first_candidate.get("content", {}) if isinstance(first_candidate, dict) else {}
                     parts = content.get("parts", []) if isinstance(content, dict) else []
-
+                    
                     for tool in parts:
 
                         tool_name = tool.get("functionCall", {}).get("name")
@@ -670,7 +667,9 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                                 "StreamingStatus": "IN-PROGRESS",
                                 "Action": "NOTIFICATION"
                             }))
-
+                        print("------------------------------------------------------------")
+                        print("selected:",selected_server_credentials)
+                        print("------------------------------------------------------------")
                         tool_call_result = await call_and_execute_tool(selected_server, selected_server_credentials, tool_name, args)
 
                         if streaming_callback and streaming_callback.get("is_stream"):
@@ -902,10 +901,22 @@ async def call_and_execute_tool(
         raise ValueError(f"Server {selected_server} not found in MCPServers")
     
     # pull per-server creds, defaulting to {}
-    creds = credentials.get(selected_server, {})
+    creds = credentials.get(selected_server, {}) if isinstance(credentials, dict) else {}
+    print(f"creds: {creds}")
+    # Always inject AppSignal credentials for MCP-APPSIGNAL
+    if selected_server == "MCP-APPSIGNAL":
+        creds = credentials.get(selected_server) or credentials
+        # Patch key name if needed
+        if "appsignal_token" in creds and "personal_api" not in creds:
+            creds["personal_api"] = creds["appsignal_token"]
+        args["__credentials__"] = creds
+        args["server_credentials"] = creds
 
     # switch/case for injecting creds (Python 3.10+)
     match selected_server:
+        case "MCP-APPSIGNAL":
+            args["__credentials__"] = creds
+            args["server_credentials"] = creds
         case "MCP-GSUITE":
             args["__credentials__"]   = creds
             args["server_credentials"] = creds

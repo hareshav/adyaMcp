@@ -1,4 +1,5 @@
 from quart import Quart, request, jsonify, make_response, Response
+from quart_cors import cors
 import json
 import asyncio
 import sys
@@ -30,6 +31,7 @@ logging.basicConfig(
 logger = logging.getLogger('api')
 
 app = Quart(__name__)
+app = cors(app, allow_origin="*")
 
 # Clean request logging middleware
 @app.before_request
