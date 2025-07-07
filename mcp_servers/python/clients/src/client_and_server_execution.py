@@ -667,9 +667,6 @@ async def client_and_server_execution(payload: Dict[str, Any], streaming_callbac
                                 "StreamingStatus": "IN-PROGRESS",
                                 "Action": "NOTIFICATION"
                             }))
-                        print("------------------------------------------------------------")
-                        print("selected:",selected_server_credentials)
-                        print("------------------------------------------------------------")
                         tool_call_result = await call_and_execute_tool(selected_server, selected_server_credentials, tool_name, args)
 
                         if streaming_callback and streaming_callback.get("is_stream"):
@@ -902,7 +899,7 @@ async def call_and_execute_tool(
     
     # pull per-server creds, defaulting to {}
     creds = credentials.get(selected_server, {}) if isinstance(credentials, dict) else {}
-    print(f"creds: {creds}")
+    
     # Always inject AppSignal credentials for MCP-APPSIGNAL
     if selected_server == "MCP-APPSIGNAL":
         creds = credentials.get(selected_server) or credentials
@@ -918,6 +915,9 @@ async def call_and_execute_tool(
             args["__credentials__"] = creds
             args["server_credentials"] = creds
         case "MCP-GSUITE":
+            args["__credentials__"]   = creds
+            args["server_credentials"] = creds
+        case "MCP-STOCKANALYZER":
             args["__credentials__"]   = creds
             args["server_credentials"] = creds
         case "FACEBOOK_MCP":

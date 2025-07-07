@@ -23,6 +23,16 @@ ServersConfig = [
 			"run",
 			"mcp-appsignal"
 		]
-	}
+	},
+	{
+    "server_name": "MCP-STOCKANALYZER",
+    "command": "uv",
+    "args": [
+        "--directory",
+        "mcp_servers/python/servers/MCP-STOCKANALYZER/mcp-stockanalyzer",
+        "run",
+        "mcp-stockanalyzer"
+    ]
+}
 
 ]
