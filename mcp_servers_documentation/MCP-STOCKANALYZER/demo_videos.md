@@ -1,12 +1,12 @@
 # MCP-STOCKANALYZER MCP Server – Demos and Payload Examples
 
 ## 🎥 Demo Video
-- **MCP-STOCKANALYZER server setup, API Execution, and Features Testing**: _[Demo video link coming soon]_
+- **MCP-STOCKANALYZER server setup, API Execution, and Features Testing**: [Watch Here](https://drive.google.com/file/d/1W54IUuQdH26UNR2E7oSe0aSP_qgbShYO/view?usp=sharing)
 
 ---
 
 ## 🎥 Credentials Gathering Video
-- **How to get your NewsAPI key and configure MCP-STOCKANALYZER**: _[Demo video link coming soon]_
+- **How to get your NewsAPI key and configure MCP-STOCKANALYZER**: [Watch Here](https://drive.google.com/file/d/1l9juZIlgJ71dJdfLT-qFlmit2cnZkWuK/view?usp=sharing)
 
 ---
 
